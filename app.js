@@ -1,7 +1,6 @@
 let allProducts = [];
 
 async function loadProducts() {
-  const container = document.getElementById("products-container");
   try {
     const res = await fetch(PRODUCT_API);
     const data = await res.json();
@@ -9,30 +8,22 @@ async function loadProducts() {
       allProducts = data.products || [];
       renderProducts();
     }
-  } catch (err) {
-    container.innerHTML = `<div class="loading">商品載入失敗，請檢查 API 設定。</div>`;
-  }
+  } catch (err) { console.error("載入失敗"); }
 }
 
 function renderProducts() {
   const container = document.getElementById("products-container");
   container.innerHTML = "";
-  
   allProducts.forEach(p => {
     const card = document.createElement("div");
     card.className = "product-card";
     card.innerHTML = `
-      <div class="product-img-wrap" data-fullsrc="${p.imageUrl}">
-        <img src="${p.imageUrl}" loading="lazy" />
-      </div>
+      <div class="product-img-wrap" data-fullsrc="${p.imageUrl}"><img src="${p.imageUrl}" loading="lazy" /></div>
       <div class="product-name">${p.name}</div>
       <div class="product-price">HKD$${p.price}</div>
-      <div class="product-qty">
-        <input type="number" min="0" value="0" data-name="${p.name}" data-price="${p.price}" />
-      </div>`;
+      <div class="product-qty"><input type="number" min="0" value="0" data-name="${p.name}" data-price="${p.price}" /></div>`;
     container.appendChild(card);
   });
-
   document.querySelectorAll(".product-qty input").forEach(i => i.addEventListener("input", updateCartSummary));
   bindImageLightbox();
 }
@@ -43,7 +34,7 @@ function updateCartSummary() {
     const qty = parseInt(input.value || "0", 10);
     if (qty > 0) {
       preview.push(`${input.dataset.name} x ${qty}`);
-      total += qty * parseInt(input.dataset.price);
+      total += qty * parseInt(input.dataset.price, 10);
     }
   });
   document.getElementById("cartPreview").textContent = preview.length ? preview.join("、") : "尚未選購";
@@ -55,62 +46,37 @@ async function handleSubmit() {
   const wa = document.getElementById("customerWhatsapp").value.trim();
   const items = [];
   let total = 0;
-  let belowMinimumItems = []; // 用來記錄不足4把的品項
+  let belowMin = [];
 
   document.querySelectorAll(".product-qty input").forEach(input => {
     const qty = parseInt(input.value || "0", 10);
-    const productName = input.dataset.name;
-    
     if (qty > 0) {
-      // 🚀 新增防呆：如果輸入大於 0 但小於 4
-      if (qty < 4) {
-        belowMinimumItems.push(productName);
-      }
-      items.push({ name: productName, qty, price: parseInt(input.dataset.price) });
-      total += qty * parseInt(input.dataset.price);
+      if (qty < 4) belowMin.push(input.dataset.name);
+      items.push({ name: input.dataset.name, qty, price: parseInt(input.dataset.price, 10) });
+      total += qty * parseInt(input.dataset.price, 10);
     }
   });
 
-  // 1. 基本欄位檢查
-  if (!name || !wa || !items.length) {
-    alert("請完整填寫資料並選擇商品。");
-    return;
-  }
-
-  // 2. 🚀 防呆邏輯：檢查是否有品項不足 4 把
-  if (belowMinimumItems.length > 0) {
-    alert(`以下品項下單數量不足 4 把，請修正：\n\n${belowMinimumItems.join("\n")}\n\n切花每款最少下單單位為 4 把。`);
-    return;
-  }
-
-  const payload = { 
-    customerName: name, 
-    customerWhatsapp: wa, 
-    shopName: document.getElementById("shopName").value.trim(),
-    shopInstagram: document.getElementById("shopInstagram").value.trim(),
-    items, 
-    total 
-  };
+  if (!name || !wa || !items.length) { alert("請填寫姓名、Whatsapp 並至少選擇一個品項。"); return; }
+  if (belowMin.length > 0) { alert("以下品項不足 4 把，請修正數量：\n" + belowMin.join("\n")); return; }
 
   const btn = document.getElementById("submitBtn");
   btn.disabled = true;
-  btn.textContent = "傳送中...";
 
   try {
     const res = await fetch(ORDER_API, {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "payload=" + encodeURIComponent(JSON.stringify(payload))
+      body: "payload=" + encodeURIComponent(JSON.stringify({
+        customerName: name, customerWhatsapp: wa,
+        shopName: document.getElementById("shopName").value.trim(),
+        shopInstagram: document.getElementById("shopInstagram").value.trim(),
+        items, total
+      }))
     });
     const data = await res.json();
-    if (data.status === "ok") {
-      showSuccessScreen(payload);
-    }
-  } catch (err) {
-    alert("送出失敗，請重試。");
-    btn.disabled = false;
-    btn.textContent = "送出訂單";
-  }
+    if (data.status === "ok") showSuccessScreen({ customerName: name, total, items });
+  } catch (err) { alert("送出失敗"); btn.disabled = false; }
 }
 
 function showSuccessScreen(payload) {
@@ -118,24 +84,15 @@ function showSuccessScreen(payload) {
   document.getElementById("cartBar").classList.add("hidden");
   document.getElementById("success-screen").classList.remove("hidden");
 
-  const itemsHtml = payload.items.map(it => `
-    <div class="summary-item">
-      <span>${it.name}</span>
-      <span>x ${it.qty}</span>
-    </div>
-  `).join('');
-
+  const itemsHtml = payload.items.map(it => `<div class="summary-item"><span>${it.name}</span><span>x ${it.qty}</span></div>`).join('');
   document.getElementById("order-summary-details").innerHTML = `
     <p><strong>訂購人：</strong>${payload.customerName}</p>
     <p><strong>總金額：</strong>HKD$${payload.total}</p>
-    <hr/>
-    ${itemsHtml}
-  `;
+    <hr/>${itemsHtml}`;
 
-  // 🚀 請更換為你的手機號碼 (例如 85291234567)
-  const myNumber = "852XXXXXXXX"; 
-  const waMsg = `您好，我已下單切花預購：\n姓名：${payload.customerName}\n總計：HKD$${payload.total}`;
-  document.getElementById("wa-confirm-btn").href = `https://wa.me/${myNumber}?text=${encodeURIComponent(waMsg)}`;
+  const lisaNumber = "85292052548"; 
+  const waMsg = `您好 Lisa，我已完成切花預購：\n姓名：${payload.customerName}\n總金額：HKD$${payload.total}`;
+  document.getElementById("wa-confirm-btn").href = `https://wa.me/${lisaNumber}?text=${encodeURIComponent(waMsg)}`;
   window.scrollTo(0,0);
 }
 
