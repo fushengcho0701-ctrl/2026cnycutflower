@@ -55,17 +55,31 @@ async function handleSubmit() {
   const wa = document.getElementById("customerWhatsapp").value.trim();
   const items = [];
   let total = 0;
+  let belowMinimumItems = []; // 用來記錄不足4把的品項
 
   document.querySelectorAll(".product-qty input").forEach(input => {
     const qty = parseInt(input.value || "0", 10);
+    const productName = input.dataset.name;
+    
     if (qty > 0) {
-      items.push({ name: input.dataset.name, qty, price: parseInt(input.dataset.price) });
+      // 🚀 新增防呆：如果輸入大於 0 但小於 4
+      if (qty < 4) {
+        belowMinimumItems.push(productName);
+      }
+      items.push({ name: productName, qty, price: parseInt(input.dataset.price) });
       total += qty * parseInt(input.dataset.price);
     }
   });
 
+  // 1. 基本欄位檢查
   if (!name || !wa || !items.length) {
     alert("請完整填寫資料並選擇商品。");
+    return;
+  }
+
+  // 2. 🚀 防呆邏輯：檢查是否有品項不足 4 把
+  if (belowMinimumItems.length > 0) {
+    alert(`以下品項下單數量不足 4 把，請修正：\n\n${belowMinimumItems.join("\n")}\n\n切花每款最少下單單位為 4 把。`);
     return;
   }
 
