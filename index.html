@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script>
-    // 🚀 請在此替換為你的 GAS 網址
+    // 🚀 請在此替換為你最新部署的 Google Apps Script 網址
     const BASE_API = "https://script.google.com/macros/s/AKfycbxEoQiHjsFBAEKQyxcWNZLW-BtdvKh-2OrJIk4HVMNfjtQ7KyA3svwR2VncLIkEqWJtcA/exec";
     const PRODUCT_API = BASE_API + "?action=products";
     const ORDER_API = BASE_API + "?action=order";
@@ -37,10 +37,10 @@
       </section>
       <section class="section">
         <h2>Step 2：填寫資料</h2>
-        <label>姓名 *</label><input id="customerName" type="text" />
-        <label>Whatsapp *</label><input id="customerWhatsapp" type="tel" />
-        <label>花店名稱</label><input id="shopName" type="text" />
-        <label>Instagram ID</label><input id="shopInstagram" type="text" />
+        <label>姓名 *</label><input id="customerName" type="text" placeholder="您的真實姓名" />
+        <label>Whatsapp *</label><input id="customerWhatsapp" type="tel" placeholder="例：91234567" />
+        <label>花店名稱</label><input id="shopName" type="text" placeholder="選填" />
+        <label>Instagram ID</label><input id="shopInstagram" type="text" placeholder="選填" />
       </section>
     </div>
     <section id="success-screen" class="section hidden">
