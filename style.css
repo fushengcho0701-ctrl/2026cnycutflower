@@ -62,7 +62,7 @@ input {
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
 }
 
-.product-name { margin-top: 10px; font-size: 0.9rem; font-weight: bold; height: 2.6rem; overflow: hidden; }
+.product-name { margin-top: 10px; font-size: 0.9rem; font-weight: bold; height: 3.5rem; overflow: hidden; }
 .product-price { color: #8fbc26; font-weight: bold; margin-top: 5px; }
 .product-qty { margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
 .product-qty input { width: 60px; text-align: center; padding: 5px; border-radius: 5px; border: 1px solid #ddd; }
