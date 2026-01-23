@@ -90,7 +90,7 @@ function showSuccessScreen(payload) {
     <p><strong>訂購人：</strong>${payload.customerName}</p>
     <p><strong>總金額：</strong>HKD$${payload.total}</p>
     <hr/>${itemsHtml}`;
-  const lisaNumber = "85292052548"; 
+  const lisaNumber = "852937212356"; 
   const waMsg = `您好 Lisa，我已完成切花預購：\n姓名：${payload.customerName}\n總計：HKD$${payload.total}`;
   document.getElementById("wa-confirm-btn").href = `https://wa.me/${lisaNumber}?text=${encodeURIComponent(waMsg)}`;
   window.scrollTo(0,0);
