@@ -3,74 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>2026 農曆新年切花預購</title>
+  <title>2026 蝴蝶蘭切花預購</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
   <script>
-    // 已更新為您最新的 GAS API 連結
+    // 🚀 請在此替換為你的 GAS 網址
     const BASE_API = "https://script.google.com/macros/s/AKfycbxEoQiHjsFBAEKQyxcWNZLW-BtdvKh-2OrJIk4HVMNfjtQ7KyA3svwR2VncLIkEqWJtcA/exec";
     const PRODUCT_API = BASE_API + "?action=products";
     const ORDER_API = BASE_API + "?action=order";
   </script>
 </head>
 <body>
-  <div id="inapp-warning" class="inapp-warning hidden">⚠️ 建議在外部瀏覽器開啟以確保正常運作</div>
-
+  <div id="inapp-warning" class="inapp-warning hidden">⚠️ 建議在外部瀏覽器開啟</div>
   <main class="page">
     <div id="main-content">
-      <header class="page-header">
-        <h1>2026 農曆新年切花預購</h1>
-      </header>
-      
+      <header class="page-header"><h1>2026 農曆新年蝴蝶蘭切花訂購</h1></header>
       <section class="highlight-box">
         <div class="icon">📋</div>
         <div class="content">
           <h3 style="margin-top: 0; color: #567b18;">訂購須知</h3>
           <ol>
             <li>價格已含空運費。</li>
-            <li class="important-note"><strong>本批次為「切花」預購，每個品項下單最少4把。</strong></li>
-            <li>到貨後請至 Day6 Studio (新蒲崗振發工廠大廈6樓B2室) 自取或聯絡 Simon 叫車。</li>
-            <li><strong>預計到港時間：2026/02/09</strong></li>
+            <li class="important-note"><strong>一般切花最少需訂 4 把；蝴蝶蘭切花以「箱」(12支) 為單位。</strong></li>
+            <li>到貨後請至 Day6 Studio (新蒲崗振發工廠大廈6樓B2室) 自取。</li>
+            <li><strong>預計到港時間：2026/02/02</strong></li>
             <li>2026/01/23 收單，逾時不候。</li>
           </ol>
         </div>
       </section>
-
       <section class="section">
         <h2>Step 1：選擇品項</h2>
-        <div id="products-container" class="products-container">
-          <div class="loading">載入商品中⋯</div>
-        </div>
+        <div id="products-container" class="products-container"><div class="loading">載入商品中⋯</div></div>
       </section>
-
       <section class="section">
         <h2>Step 2：填寫資料</h2>
-        <label>姓名 *</label>
-        <input id="customerName" type="text" placeholder="您的真實姓名" />
-        
-        <label>Whatsapp *</label>
-        <input id="customerWhatsapp" type="tel" placeholder="例：91234567" />
-        
-        <label>花店名稱</label>
-        <input id="shopName" type="text" placeholder="選填" />
-        
-        <label>Instagram ID</label>
-        <input id="shopInstagram" type="text" placeholder="選填" />
+        <label>姓名 *</label><input id="customerName" type="text" />
+        <label>Whatsapp *</label><input id="customerWhatsapp" type="tel" />
+        <label>花店名稱</label><input id="shopName" type="text" />
+        <label>Instagram ID</label><input id="shopInstagram" type="text" />
       </section>
     </div>
-
     <section id="success-screen" class="section hidden">
       <div class="success-box">
         <div class="success-icon">✅</div>
         <h2>預購成功！</h2>
-        <p>請截圖下方明細並私訊確認：</p>
         <div id="order-summary-details" class="summary-details"></div>
         <a id="wa-confirm-btn" href="#" target="_blank" class="wa-button">透過 Whatsapp 確認訂單</a>
         <button onclick="window.location.reload()" class="reload-btn">返回重新填寫</button>
       </div>
     </section>
   </main>
-
   <div id="cartBar" class="cart-bar">
     <div class="cart-left"><div id="cartPreview">尚未選購</div></div>
     <div class="cart-right">
@@ -78,12 +60,10 @@
       <button id="submitBtn" class="cart-submit-btn">送出訂單</button>
     </div>
   </div>
-
   <div id="lightbox" class="lightbox hidden">
     <div class="lightbox-backdrop" data-role="close-lightbox"></div>
     <div class="lightbox-inner"><img id="lightboxImg" src="" /><button class="lightbox-close" data-role="close-lightbox">✕</button></div>
   </div>
-  
   <script src="app.js"></script>
 </body>
 </html>
